@@ -34,18 +34,20 @@
       L.tileLayer.webatlas({apikey: '59c0b457-d253-451b-9fbf-74f23881488a', mapType: L.TileLayer.Webatlas.Type.GREY}).addTo(map);
 
 
-      var layerUrl = 'https://alexanno-test.carto.com/api/v2/viz/180c2bb2-7dd9-11e6-a0ba-0ecd1babdde5/viz.json';
+      var layerUrl = 'https://bflugon.carto.com/api/v2/viz/a5f110ca-801b-11e6-96c7-0ecd1babdde5/viz.json';
 
       //funksjon for å oppdatere carto-layeret sin SQL. Resultatet er oppdatert "tilecache"
-      kursns.updateQuery = function(cartosublayer, minBelop) {
+      
+	  kursns.updateQuery = function(cartosublayer, latlng) {
         cartosublayer.set({
-          sql: "SELECT * FROM omsetningsdata where omsetningsbeloep >= " + minBelop
+          sql: "SELECT * FROM Samfundet as s, st_distance(st_transform(s, 32633), st_transform(ST_SetSRID(ST_MakePoint(latlng.lng, latlng.lat),4326),32633)) avstand_meter"
         });
       }
+	  
 
       //funksjon for å kjøre SQL og få tilbake dataresultatet som geojson
       kursns.runSQL = function(sqlquery, variables, cbFunc) {
-        var sql = new cartodb.SQL({ user: 'alexanno-test' });
+        var sql = new cartodb.SQL({ user: 'bflugon' });
         console.log(sqlquery,variables)
         sql.execute(sqlquery, variables)
           .done(function(data) {
@@ -65,23 +67,27 @@
 
           //legg carto-layeret i et globalt namespace 
           kursns.cartolayer = layer;
-          kursns.cartoLayer_omsetningsdata = layer.getSubLayer(1);
-
+          kursns.cartoLayer_samfundet = layer.getSubLayer(0);
+			
+			map.on("click", function(e){
+				console.log(e, e.latlng);
+				kursns.updateQuery(cartoLayer_samfundet, e.latlng);
+			});
           //Legg til "klikk-i-kart"-event
-          map.on('click', function(e) {
+         /* map.on('click', function(e) {
             console.log(e, e.latlng);
             //kjør en spørring basert på hvor brukeren klikket
             //se: http://leafletjs.com/reference.html#event-objects
             kursns.runSQL( // få de 100 nærmeste omsetninger uavhengig av avstanden til de (KNN)
               "SELECT * from omsetningsdata order by the_geom <-> ST_SetSRID(ST_MakePoint({{latlng}}),4326) limit 100",
-              {
+             {
                 latlng: e.latlng.lng + ", " + e.latlng.lat
               },
               function(data) {
                 console.log(data.rows);
               }
             );
-          });
+          });*/
         }).on('error', function() {
           //log the error
         });

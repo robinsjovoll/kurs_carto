@@ -80,7 +80,7 @@
             //kjør en spørring basert på hvor brukeren klikket
             //se: http://leafletjs.com/reference.html#event-objects
             kursns.runSQL( // få de 100 nærmeste omsetninger uavhengig av avstanden til de (KNN)
-              "SELECT *, st_distance(st_transform(the_geom, 32633), st_transform(ST_SetSRID(ST_MakePoint(latlng.lng, latlng.lat),4326),32633))",
+              "SELECT * FROM Samfundet, st_distance(st_transform(the_geom, 32633), st_transform(ST_SetSRID(ST_MakePoint(latlng.lng, latlng.lat),4326),32633))",
              {
                 latlng: e.latlng.lng + ", " + e.latlng.lat
               },

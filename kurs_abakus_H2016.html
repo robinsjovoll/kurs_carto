@@ -69,17 +69,18 @@
           kursns.cartolayer = layer;
           kursns.cartoLayer_samfundet = layer.getSubLayer(0);
 			
-			map.on("click", function(e){
+			/*map.on("click", function(e){
 				console.log(e, e.latlng);
 				kursns.updateQuery(cartoLayer_samfundet, e.latlng);
 			});
+			*/
           //Legg til "klikk-i-kart"-event
-         /* map.on('click', function(e) {
+          map.on('click', function(e) {
             console.log(e, e.latlng);
             //kjør en spørring basert på hvor brukeren klikket
             //se: http://leafletjs.com/reference.html#event-objects
             kursns.runSQL( // få de 100 nærmeste omsetninger uavhengig av avstanden til de (KNN)
-              "SELECT * from omsetningsdata order by the_geom <-> ST_SetSRID(ST_MakePoint({{latlng}}),4326) limit 100",
+              "SELECT *, st_distance(st_transform(the_geom, 32633), st_transform(ST_SetSRID(ST_MakePoint(latlng.lng, latlng.lat),4326),32633))",
              {
                 latlng: e.latlng.lng + ", " + e.latlng.lat
               },
@@ -87,7 +88,7 @@
                 console.log(data.rows);
               }
             );
-          });*/
+          });
         }).on('error', function() {
           //log the error
         });

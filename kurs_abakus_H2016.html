@@ -34,7 +34,7 @@
       L.tileLayer.webatlas({apikey: '59c0b457-d253-451b-9fbf-74f23881488a', mapType: L.TileLayer.Webatlas.Type.GREY}).addTo(map);
 
 
-      var layerUrl = 'https://bflugon.carto.com/api/v2/viz/a5f110ca-801b-11e6-96c7-0ecd1babdde5/viz.json';
+      var layerUrl = 'https://bflugon.carto.com/api/v2/viz/03acb62a-801b-11e6-a2f2-0e233c30368f/viz.json';
 
       //funksjon for å oppdatere carto-layeret sin SQL. Resultatet er oppdatert "tilecache"
       
@@ -80,7 +80,7 @@
             //kjør en spørring basert på hvor brukeren klikket
             //se: http://leafletjs.com/reference.html#event-objects
             kursns.runSQL( // få de 100 nærmeste omsetninger uavhengig av avstanden til de (KNN)
-              "SELECT * FROM Samfundet, st_distance(st_transform(the_geom, 32633), st_transform(ST_SetSRID(ST_MakePoint(latlng.lng, latlng.lat),4326),32633))",
+              "SELECT * FROM Samfundet, st_distance(st_transform(the_geom, 32633), st_transform(ST_SetSRID(ST_MakePoint(e.latlng.lng, e.latlng.lat),4326),32633))",
              {
                 latlng: e.latlng.lng + ", " + e.latlng.lat
               },
